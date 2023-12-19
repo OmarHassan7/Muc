@@ -120,15 +120,9 @@
       <form id="forml" class="forml" method="POST" action="server.php">
         <div id="inputs" class="inputs">
           <label>ID</label>
-          <input name="idnumber" type="number" placeholder="Enter your ID" min="0" step="none" required />
+          <input id="idnumber" name="idnumber" type="number" placeholder="Enter your ID" min="0" step="none" required />
           <div class="suemail" id="suemail"></div>
-
-          <label>Password</label>
-          <div class="passInpStyles">
-            <input id="pass" name="passcode" type="password" placeholder="Enter your Passcode" required />
-            <i id="togglePass" class="fa-solid fa-eye-slash"></i>
-          </div>
-            
+          <div id="passDiv"></div>
           <div id="verifInputsContainer"></div>
         </div>
 

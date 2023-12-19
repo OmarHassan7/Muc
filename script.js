@@ -14,6 +14,8 @@ const container = document.getElementById("container");
 const lowercont = document.getElementById("lowercont");
 const btnsin = document.getElementById("btn-sin");
 const suemail = document.getElementById("suemail");
+const passDiv = document.getElementById("passDiv");
+fixpassfield();
 var logoAnimation;
 const test = document.createElement("SVG");
 var animationcanceled;
@@ -185,6 +187,7 @@ function fifthfunction() {
   lowerf.style.width = "0";
   setTimeout(function () {
     rtlanimation(lowerf);
+    dtu;
   }, 1000);
   btnsin.style.color = "transparent";
   setTimeout(function () {
@@ -193,18 +196,27 @@ function fifthfunction() {
   setTimeout(function () {
     paddinganimrev(btnsin);
   }, 1000);
-  vercontainer.style.height = "0";
+  // vercontainer.style.height = "0";
+  destroypassInputs();
 
   setTimeout(afterfifth, 1000);
 }
 function afterfifth() {
   lowerfbtnii.style.display = "none";
   lowerfbtni.textContent = "Back";
-  btnsin.value = "Recover password";
+  btnsin.value = "Send Pin";
+  btnsin.setAttribute("onclick", "betfifthsix()");
   alrnew.textContent = "Return back?";
   lowerfbtni.setAttribute("onclick", "sixthfunction()");
-  createNewpassfield();
-  createConfirmpassfield();
+  // createVerificationfield();
+  // setTimeout(fixheightprobver, 100);
+}
+
+function betfifthsix() {
+  btnsin.setAttribute("onclick", "");
+  btnsin.value = "Change Password";
+  fixpassfield();
+  createVerificationfield();
   setTimeout(fixheightprobver, 100);
 }
 
@@ -226,14 +238,25 @@ function sixthfunction() {
 
   setTimeout(aftersixth, 1000);
 }
+
+// createpassfield();
+// passDiv.style.height = "57.2px";
+// setTimeout(function () {
+//   rtlanimation(passDiv);
+// }, 800);
+
 function aftersixth() {
   btnsin.value = "Sign in";
+  btnsin.setAttribute("onclick", "secondfunction()");
   lowerfbtni.textContent = "Sign up";
   alrnew.textContent = "New member?";
   lowerfbtnii.style.display = "block";
   lowerfbtni.setAttribute("onclick", "thirdfunction()");
-  revfixheightprobver();
+
   setTimeout(destroyVerificationInputs, 1500);
+  createpassfield();
+  fixpassfield();
+  revfixheightprobver();
 }
 
 function rtlanimation(element) {
@@ -321,57 +344,98 @@ function cancelanimatelogo(element) {
   }
 }
 
-function createNewpassfield() {
+function createpassfield() {
+  var passInpStyles = document.createElement("div");
+  passInpStyles.setAttribute("id", "passInpStyles");
+
+  // Create the label
+  var label = document.createElement("label");
+  label.innerHTML = "Password";
+  label.setAttribute("for", "passInput");
+
+  // Create the password input
+  var passInput = document.createElement("input");
+  passInput.setAttribute("id", "passInput");
+  passInput.setAttribute("name", "passcode");
+  passInput.setAttribute("type", "password");
+  passInput.placeholder = "Enter your Passcode";
+  passInput.required = true;
+
+  // Create the eye icon
+  var togglePass = document.createElement("i");
+  togglePass.setAttribute("id", "togglePass");
+  togglePass.className = "fa-solid fa-eye-slash";
+
+  // Append the elements to the parent div
+  passDiv.appendChild(label);
+  passDiv.appendChild(passInpStyles);
+  passInpStyles.appendChild(passInput);
+  passInpStyles.appendChild(togglePass);
+
+  // Function to show and hide the password input field when clicking on eye icon
+  let eyeIcon = document.getElementById("togglePass");
+  eyeIcon.addEventListener("click", function () {
+    if (passInput.type === "password") {
+      passInput.type = "text";
+      eyeIcon.classList.add("fa-solid", "fa-eye");
+    } else {
+      passInput.type = "password";
+      eyeIcon.classList.remove("fa-solid", "fa-eye");
+      eyeIcon.classList.add("fa-solid", "fa-eye-slash");
+    }
+  });
+}
+function fixpassfield() {
+  createpassfield();
+  passDiv.style.height = "57.2px";
+  setTimeout(function () {
+    rtlanimation(passDiv);
+  }, 300);
+}
+function destroypassInputs() {
+  // Remove all child elements (inputs)
+
+  passDiv.style.width = "0";
+  setTimeout(function () {
+    dtuanimation(passDiv);
+  }, 1000);
+
+  setTimeout(() => {
+    passDiv.innerHTML = " ";
+  }, 1000);
+}
+
+function createVerificationfield() {
+  var input2 = document.createElement("label");
+  input2.innerHTML = "Enter Pin";
+  input2.setAttribute("class", "new-pass-label");
+  input2.setAttribute("id", "new-pass-label");
+  input2.setAttribute("for", "new-pass");
+  vercontainer.appendChild(input2);
   var input = document.createElement("div");
   input.setAttribute("class", "new-pass-div");
   input.setAttribute("id", "new-pass-div");
   input.setAttribute("name", "new-pass-div");
   vercontainer.appendChild(input);
 
-  var input2 = document.createElement("label");
-  input2.innerHTML = "New Password";
-  input2.setAttribute("class", "new-pass-label");
-  input2.setAttribute("id", "new-pass-label");
-  input2.setAttribute("for", "new-pass");
-  input.appendChild(input2);
+  for (var i = 1; i <= 4; i++) {
+    var input3 = document.createElement("input");
+    input3.setAttribute("class", "verifinput");
+    input3.setAttribute("type", "text");
+    input3.setAttribute("name", "n" + i);
+    input3.setAttribute("maxlength", "1");
+    input3.required = true;
 
-  var input3 = document.createElement("input");
-  input3.setAttribute("class", "new-pass");
-  input3.setAttribute("id", "new-pass");
-  input3.setAttribute("type", "password");
-  input3.setAttribute("name", "new-pass");
-  input3.setAttribute("maxlength", "1");
-  input.appendChild(input3);
-}
-
-function createConfirmpassfield() {
-  var input = document.createElement("div");
-  input.setAttribute("class", "Confirm-pass-div");
-  input.setAttribute("id", "Confirm-pass-div");
-  input.setAttribute("name", "Confirm-pass-div");
-  vercontainer.appendChild(input);
-
-  var input2 = document.createElement("label");
-  input2.innerHTML = "Confirm Password";
-  input2.setAttribute("class", "Confirm-pass-label");
-  input2.setAttribute("id", "Confirm-pass-label");
-  input2.setAttribute("for", "Confirm-pass");
-  input.appendChild(input2);
-
-  var input3 = document.createElement("input");
-  input3.setAttribute("class", "Confirm-pass");
-  input3.setAttribute("id", "Confirm-pass");
-  input3.setAttribute("type", "password");
-  input3.setAttribute("name", "Confirm-pass");
-  input3.setAttribute("maxlength", "1");
-  input.appendChild(input3);
+    input.appendChild(input3);
+  }
 }
 
 function fixheightprobver() {
-  vercontainer.style.height = "114.4px";
+  vercontainer.style.height = "69.6px";
 }
-function revfixheightprobver() {}
-vercontainer.style.height = "0";
+function revfixheightprobver() {
+  vercontainer.style.height = "0";
+}
 
 // Function to destroy verification code input fields
 function destroyVerificationInputs() {
