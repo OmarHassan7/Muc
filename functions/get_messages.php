@@ -25,6 +25,7 @@ if ($result->num_rows > 0) {
             'sender' => $row['sender'],
             'channel_id' => $row['channel_id'],
             'message' => $row['message'],
+            'userid' => $row['userid'],
         );
     }
 }

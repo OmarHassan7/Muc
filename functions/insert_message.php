@@ -13,10 +13,11 @@ $sender = $_POST['sender'];
 $message = $_POST['message'];
 $channel_id = $_POST['channel_id']; // Added this line to define $category
 $date = date('Y-m-d h:i:s');
+$userId = $_POST["userid"];
 // throw new Exception($sender . $message . $channel_id);
 // Insert message into the database
-$stmt = $mysqli->prepare("INSERT INTO messages (sender, message, channel_id , timestamp) VALUES (?, ?, ? , ?)");
-$stmt->bind_param("ssss", $sender, $message, $channel_id, $date);
+$stmt = $mysqli->prepare("INSERT INTO messages (sender, message, channel_id , timestamp , userid) VALUES (?, ?, ? , ? , ?)");
+$stmt->bind_param("sssss", $sender, $message, $channel_id, $date, $userId);
 $stmt->execute();
 $stmt->close();
 

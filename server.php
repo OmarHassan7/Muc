@@ -60,7 +60,7 @@ $conn->close();
     <title>Live Chat [<?php echo    $name; ?>]</title>
 
     <style>
-  
+
     </style>
     <link rel="stylesheet" href="chatstyletemp.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
@@ -85,8 +85,8 @@ $conn->close();
             </div>
         </div>
     </section>
-    <div id="container"> 
-        <div id="sidebar"  >
+    <div id="container">
+        <div id="sidebar">
             <div class="muc-img-div">
                 <img class="muc-img" src="Images/Group 2.svg" alt="">
             </div>
@@ -94,14 +94,14 @@ $conn->close();
                 <?php echo    $name; ?>!
             </div>
             <div id="online-users-container">
-            <label for="touch"><span class="touch-span" id="toggleIcon">Online Users</span></label>               
-            <input type="checkbox" id="touch"> 
-           
-            <div class="search-div">
-           
-            <input type="text" class="search" id="search" placeholder="Search by ID">
-            </div>
-               <br>
+                <label for="touch"><span class="touch-span" id="toggleIcon">Online Users</span></label>
+                <input type="checkbox" id="touch">
+
+                <div class="search-div">
+
+                    <input type="text" class="search" id="search" placeholder="Search by ID">
+                </div>
+                <br>
                 <div id="online-users">
                 </div>
             </div>
@@ -111,37 +111,34 @@ $conn->close();
             </div>
             <div class="logout-container">
 
-           
-            <a href="logout.php" class="logout-button">Logout</a>
-            </div>  </div>
-        
+
+                <a href="logout.php" class="logout-button">Logout</a>
+            </div>
+        </div>
+
         <div id="chat-container">
-        <div class="sidebtndiv">
-            <button id="sidebar-btn"><i class="fa-solid fa-arrow-right" id="side-arrow"></i>
-</button>
+            <div class="sidebtndiv">
+                <button id="sidebar-btn"><i class="fa-solid fa-arrow-right" id="side-arrow"></i>
+                </button>
 
             </div>
             <div id="chat-messages">
-           
+
             </div>
             <div class="inputs-fields">
                 <div class="message-input-div">
-                <input type="text" id="message-input" placeholder="Type your message..." class="input">
-                <input type="number" id="shift-input" min="0" placeholder="Key" class="input">
-               
-                <button id="send-button" class="button">Send</button>
+                    <input type="text" id="message-input" placeholder="Type your message..." class="input">
+                    <input type="number" id="shift-input" min="0" placeholder="Key" class="input">
+
+                    <button id="send-button" class="button">Send</button>
 
                 </div>
-                
+
             </div>
         </div>
     </div>
 
     <script>
-  
-
-
-
         const ws = new WebSocket('ws://localhost:8080?username=<?php echo $name; ?>&user_id=<?php echo $user_id ?> ');
         const userName = "<?php echo $name; ?>";
         const userId = "<?php echo $user_id; ?>";
@@ -183,7 +180,8 @@ $conn->close();
                 const data = {
                     sender: encodeURIComponent(userName),
                     message: encodeURIComponent(fullMessage),
-                    channel_id: encodeURIComponent(window.current_channel_id)
+                    channel_id: encodeURIComponent(window.current_channel_id),
+                    userid: encodeURIComponent(userId),
                 };
                 fetch('functions/insert_message.php', {
                         method: 'POST',
@@ -203,7 +201,8 @@ $conn->close();
                             data: {
                                 sender: userName,
                                 channel_id: window.current_channel_id,
-                                message: message
+                                message: message,
+                                userid: userId,
                             }
                         })
                         ws.send(x);
@@ -238,7 +237,7 @@ $conn->close();
 
 
         function updateOnlineUsers(onlineUsers) {
-    
+
             const onlineUsersElement = document.getElementById('online-users');
             onlineUsersElement.innerHTML = '<ul id="online-users-list"></ul>';
 
@@ -246,39 +245,42 @@ $conn->close();
             const categorySelect = document.getElementById('category-select');
             const toggleIcon = document.getElementById('toggleIcon');
 
-            const onlineuserscount=onlineUsers.length;
-  const touch = document.getElementById('touch');
-                touch.addEventListener('change', function() {
-    // Update the height of the online-users-list element based on the checkbox state
-    onlineUsersList.style.height = touch.checked ? onlineuserscount*47.4 +"px" : '0';
-    toggleIcon.classList.toggle('minus', touch.checked);
+            const onlineuserscount = onlineUsers.length;
+            const touch = document.getElementById('touch');
+            touch.addEventListener('change', function() {
+                // Update the height of the online-users-list element based on the checkbox state
+                onlineUsersList.style.height = touch.checked ? onlineuserscount * 47.4 + "px" : '0';
+                toggleIcon.classList.toggle('minus', touch.checked);
 
-  });
+            });
 
-  const usersobserver = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-      if (mutation.type === 'childList') {
-    onlineUsersList.style.height = touch.checked ? onlineuserscount*47.4 +"px" : '0';
+            const usersobserver = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList') {
+                        onlineUsersList.style.height = touch.checked ? onlineuserscount * 47.4 + "px" : '0';
 
-      }
-    });
-  });
+                    }
+                });
+            });
 
-  const usersconfig = { childList: true, subtree: true };
-  usersobserver.observe(onlineUsersList, usersconfig);
+            const usersconfig = {
+                childList: true,
+                subtree: true
+            };
+            usersobserver.observe(onlineUsersList, usersconfig);
 
 
 
-  onlineUsersList.addEventListener('change',function(){
-  
-  });
+            onlineUsersList.addEventListener('change', function() {
+
+            });
 
             console.log("aaaa", {
                 onlineUsers
             });
-            
+
             console.log(onlineUsers[1]);
-            onlineUsers.filter(x => x.name !== userName).forEach(({
+            onlineUsers.filter(x => x.user_id !== userId).forEach(({
                 name: username,
                 user_id
             }) => {
@@ -326,7 +328,7 @@ $conn->close();
                 listItem.appendChild(link);
                 onlineUsersList.appendChild(listItem);
             });
-            
+
         }
 
 
@@ -440,7 +442,7 @@ $conn->close();
 
 
         document.getElementById('send-button').addEventListener('click', sendMessage);
-        
+
 
         document.getElementById('message-input').addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
@@ -451,33 +453,33 @@ $conn->close();
         document.getElementById('message-input').addEventListener('keydown', function(event) {
             var currentValue = parseInt(document.getElementById('shift-input').value) || 0;
 
-    if (event.key === 'ArrowUp' ) {
+            if (event.key === 'ArrowUp') {
 
-        document.getElementById('shift-input').value = currentValue + 1;
-    }
-    if (event.key === 'ArrowDown') {
-        if(currentValue>0)
-        document.getElementById('shift-input').value = currentValue - 1;
-    }
+                document.getElementById('shift-input').value = currentValue + 1;
+            }
+            if (event.key === 'ArrowDown') {
+                if (currentValue > 0)
+                    document.getElementById('shift-input').value = currentValue - 1;
+            }
 
-});
+        });
 
 
-document.getElementById('message-input').addEventListener('wheel', function(event) {
-    var currentValue = parseInt(document.getElementById('shift-input').value) || 0;
+        document.getElementById('message-input').addEventListener('wheel', function(event) {
+            var currentValue = parseInt(document.getElementById('shift-input').value) || 0;
 
-    // Detect whether the wheel event is scrolling up or down
-    var delta = Math.sign(event.deltaY);
+            // Detect whether the wheel event is scrolling up or down
+            var delta = Math.sign(event.deltaY);
 
-    if (delta > 0) {
-        // Scrolling down
-        if (currentValue > 0)
-            document.getElementById('shift-input').value = currentValue - 1;
-    } else if (delta < 0) {
-        // Scrolling up
-        document.getElementById('shift-input').value = currentValue + 1;
-    }
-});
+            if (delta > 0) {
+                // Scrolling down
+                if (currentValue > 0)
+                    document.getElementById('shift-input').value = currentValue - 1;
+            } else if (delta < 0) {
+                // Scrolling up
+                document.getElementById('shift-input').value = currentValue + 1;
+            }
+        });
         // ws.onopen(function() {
         //     console.log("Clinet Connected");
         // })
@@ -503,7 +505,7 @@ document.getElementById('message-input').addEventListener('wheel', function(even
                 default:
                     throw new Error("unhandled case");
             }
-            
+
         };
 
 
@@ -520,10 +522,11 @@ document.getElementById('message-input').addEventListener('wheel', function(even
             x.forEach(channel => {
                 const elem = document.createElement("div");
                 elem.className = window.current_channel_id === channel.id ? "conversation-link current" : "conversation-link ";
-                elem.textContent = channel.name.split("_").filter(x => x != userName)[0] || "self";
+                elem.textContent = channel.name.split("_").filter(x => x != userName)[0] || userName;
+                // elem.textContent = channel.name.split("_").filter(x => x != userName)[0] || "self";
+                console.log("aaabbaaaaa", channel.name.split("_"));
                 elem.setAttribute("data-channel-id", channel.id);
                 elem.addEventListener('click', function(event) {
-
                     event.preventDefault();
                     const channel_id = this.getAttribute('data-channel-id');
                     window.current_channel_id = channel_id;
@@ -533,7 +536,7 @@ document.getElementById('message-input').addEventListener('wheel', function(even
                 });
                 channelsContainer.appendChild(elem);
             })
-            
+
         }
 
         function loadChannels() {
@@ -567,7 +570,7 @@ document.getElementById('message-input').addEventListener('wheel', function(even
                 renderChannels(y);
                 // loadMessages(window.current_channel_id)
             })
-            
+
         }
 
         function loadMessages(channel_id) {
@@ -575,7 +578,7 @@ document.getElementById('message-input').addEventListener('wheel', function(even
             console.log(channel_id);
             fetch(`functions/get_messages.php?channel_id=${encodeURIComponent(channel_id)}`).then(res => res.json()).then(messages =>
                 messages.forEach(function(message) {
-                    const isCurrentUser = message.sender === userName;
+                    const isCurrentUser = message.userid == userId;
                     const userClass = isCurrentUser ? 'user-message' : 'other-message';
                     appendMessage(`${message.sender} : ${message.message}`, userClass);
                 })
@@ -596,99 +599,95 @@ document.getElementById('message-input').addEventListener('wheel', function(even
         const sidebar = document.getElementById('sidebar');
 
         const toggleIcon = document.getElementById('toggleIcon');
-      const chann = document.getElementById('channels')
+        const chann = document.getElementById('channels')
         const welcomemessage = document.getElementById('welcome-message');
         const ConvTxt = document.querySelector('.ConvTxt');
         const sidearrow = document.getElementById('side-arrow');
 
-        
-        
+
+
 
         sidebarbtn.addEventListener("click", function(e) {
             if (window.innerWidth <= 480) {
-                if (sidebar.style.width === "63%"){
-                console.log("hey there nigger2");
-            sidebar.style.width="0px";
-            sidebar.style.padding="0px"
-            toggleIcon.style.fontSize ="1em";
-            ConvTxt.style.fontSize ="16px";
-            chann.classList.toggle('hide-scrollbar');
-            sidearrow.style.transform="rotate(0deg)";
-       console.log(conversationLinks); // Check what elements are selected
-   
-        }
-        else if (sidebar.style.width !== "63%")  {
-            console.log("hey there nigger");
-            sidebar.style.width="63%";
-            sidebar.style.padding="30px"
-            toggleIcon.style.fontSize ="1.2em";
-            ConvTxt.style.fontSize ="16px";
-            chann.classList.remove('hide-scrollbar');
-            sidearrow.style.transform="rotate(-180deg)";
+                if (sidebar.style.width === "63%") {
+                    console.log("hey there nigger2");
+                    sidebar.style.width = "0px";
+                    sidebar.style.padding = "0px"
+                    toggleIcon.style.fontSize = "1em";
+                    ConvTxt.style.fontSize = "16px";
+                    chann.classList.toggle('hide-scrollbar');
+                    sidearrow.style.transform = "rotate(0deg)";
+                    console.log(conversationLinks); // Check what elements are selected
+
+                } else if (sidebar.style.width !== "63%") {
+                    console.log("hey there nigger");
+                    sidebar.style.width = "63%";
+                    sidebar.style.padding = "30px"
+                    toggleIcon.style.fontSize = "1.2em";
+                    ConvTxt.style.fontSize = "16px";
+                    chann.classList.remove('hide-scrollbar');
+                    sidearrow.style.transform = "rotate(-180deg)";
 
 
-        }
-  } else {
-    
-    if (sidebar.style.width === "250px"){
-                console.log("hey there nigger2");
-            sidebar.style.width="100px";
-            sidebar.style.padding="15px"
-            toggleIcon.style.fontSize ="1em";
-            ConvTxt.style.fontSize ="15px";
-            chann.classList.toggle('hide-scrollbar');
-            sidearrow.style.transform="rotate(0deg)";
-       console.log(conversationLinks); // Check what elements are selected
-   
-        }
-        else if (sidebar.style.width !== "250px")  {
-            console.log("hey there nigger");
-            sidebar.style.width="250px";
-            sidebar.style.padding="30px"
-            toggleIcon.style.fontSize ="1.2em";
-            ConvTxt.style.fontSize ="16px";
-            chann.classList.remove('hide-scrollbar');
-            sidearrow.style.transform="rotate(-180deg)";
+                }
+            } else {
+
+                if (sidebar.style.width === "250px") {
+                    console.log("hey there nigger2");
+                    sidebar.style.width = "100px";
+                    sidebar.style.padding = "15px"
+                    toggleIcon.style.fontSize = "1em";
+                    ConvTxt.style.fontSize = "15px";
+                    chann.classList.toggle('hide-scrollbar');
+                    sidearrow.style.transform = "rotate(0deg)";
+                    console.log(conversationLinks); // Check what elements are selected
+
+                } else if (sidebar.style.width !== "250px") {
+                    console.log("hey there nigger");
+                    sidebar.style.width = "250px";
+                    sidebar.style.padding = "30px"
+                    toggleIcon.style.fontSize = "1.2em";
+                    ConvTxt.style.fontSize = "16px";
+                    chann.classList.remove('hide-scrollbar');
+                    sidearrow.style.transform = "rotate(-180deg)";
 
 
-        }
-  }
-    
-    
+                }
+            }
+
+
         })
 
-function startofchat(){
-    if (window.innerWidth <= 480) {
-            sidebar.style.width="0px";
-            sidebar.style.padding="0px" 
-            sidebar.style.marginLeft = "0px";        }
-        else{
-            sidebar.style.width="250px";
-            sidebar.style.padding="30px"
-            sidebar.style.marginLeft = "7px"; 
+        function startofchat() {
+            if (window.innerWidth <= 480) {
+                sidebar.style.width = "0px";
+                sidebar.style.padding = "0px"
+                sidebar.style.marginLeft = "0px";
+            } else {
+                sidebar.style.width = "250px";
+                sidebar.style.padding = "30px"
+                sidebar.style.marginLeft = "7px";
 
 
-        }
-        window.addEventListener('resize',function(e){
-        if (window.innerWidth <= 480) {
-            sidebar.style.marginLeft = "0px"; 
-            sidebar.style.width="0px";
-            sidebar.style.padding="0px" 
+            }
+            window.addEventListener('resize', function(e) {
+                if (window.innerWidth <= 480) {
+                    sidebar.style.marginLeft = "0px";
+                    sidebar.style.width = "0px";
+                    sidebar.style.padding = "0px"
 
-        }
-        else{
-            sidebar.style.width="250px";
-            sidebar.style.padding="30px"
-            sidebar.style.marginLeft = "7px"; 
-
-           
-        }
-    });
-};
+                } else {
+                    sidebar.style.width = "250px";
+                    sidebar.style.padding = "30px"
+                    sidebar.style.marginLeft = "7px";
 
 
-startofchat()
-                     
+                }
+            });
+        };
+
+
+        startofchat()
     </script>
 </body>
 
