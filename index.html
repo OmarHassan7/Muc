@@ -163,46 +163,52 @@
       </script>
       <script>
 
-        var x;
+var x;
 
-        $(document).ready(function () {
-          // Attach a submit handler to the form
-          $("#forml").submit(function (event) {
-            // Prevent the default form submission
-            event.preventDefault();
+$(document).ready(function () {
+  // Attach a submit handler to the form
+  $("#forml").submit(function (event) {
+    // Prevent the default form submission
+    event.preventDefault();
 
-            // Get the form data
-            var formData = $(this).serialize();
-            var btnsin = document.getElementById("btn-sin");
+    // Get the form data
+    var formData = $(this).serialize();
+    var btnsin = document.getElementById("btn-sin");
 
+    // Check if the value of btnsin is "Send pin" and set the action and url accordingly
+    if (btnsin.value === "Send pin") {
+      this.action = "forget.php";
+      var url = "forget.php";
+    } else {
+      // Set the url based on the value of btnsin for other cases
+      var url = (btnsin.value === "Sign up") ? "signup.php" : "signin.php";
+    }
 
-            if (x === "Valid login!") {
-              x = "0";
-              this.submit();
-            } else {
-              // Handle the normal form submission if x is not "1"
-              var url = (btnsin.value === "Sign up") ? "signup.php" : "signin.php";
+    if (x === "Valid login!") {
+      x = "0";
+      this.submit();
+    } else {
+      // Handle the normal form submission if x is not "1"
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: formData,
+        success: function (response) {
+          // Set the value of x to the trimmed response
+          x = response.trim();
+          if (x === "Valid login!" || x === "Data saved successfully!") {
+            // Update the content of an element with the ID "result" with the trimmed response and set text color to green
+            $("#result").html(response).css("color", "green");
+          } else {
+            // Update the content of an element with the ID "result" with the trimmed response and set text color to a different color
+            $("#result").html(response).css("color", "red"); // or any other color you prefer for the "else" case
+          }
+        }
+      });
+    }
+  });
+});
 
-              $.ajax({
-                type: "POST",
-                url: url,
-                data: formData,
-                success: function (response) {
-                  // Set the value of x to the trimmed response
-                  x = response.trim();
-                  if (x === "Valid login!" || x === "Data saved successfully!") {
-                    // Update the content of an element with the ID "result" with the trimmed response and set text color to green
-                    $("#result").html(response).css("color", "green");
-                  } else {
-                    // Update the content of an element with the ID "result" with the trimmed response and set text color to a different color
-                    $("#result").html(response).css("color", "red"); // or any other color you prefer for the "else" case
-                  }
-
-                }
-              });
-            }
-          });
-        });
       </script>
 
       <!-- Include your other scripts -->

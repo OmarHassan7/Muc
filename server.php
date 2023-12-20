@@ -139,7 +139,7 @@ $conn->close();
     </div>
 
     <script>
-        const ws = new WebSocket('ws://localhost:8080?username=<?php echo $name; ?>&user_id=<?php echo $user_id ?> ');
+        const ws = new WebSocket('ws://192.168.186.84:8080?username=<?php echo $name; ?>&user_id=<?php echo $user_id ?> ');
         const userName = "<?php echo $name; ?>";
         const userId = "<?php echo $user_id; ?>";
         window.onload = async function() {
