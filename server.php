@@ -139,7 +139,7 @@ $conn->close();
     </div>
 
     <script>
-        const ws = new WebSocket('ws://192.168.186.84:8080?username=<?php echo $name; ?>&user_id=<?php echo $user_id ?> ');
+        const ws = new WebSocket('ws://127.0.0.1:8080?username=<?php echo $name; ?>&user_id=<?php echo $user_id ?> ');
         const userName = "<?php echo $name; ?>";
         const userId = "<?php echo $user_id; ?>";
         window.onload = async function() {
@@ -401,6 +401,8 @@ $conn->close();
                     // If the current content is decrypted, revert to the encrypted message
                     messageText.textContent = encryptedMessage;
                 }
+
+                re
 
             }
 
